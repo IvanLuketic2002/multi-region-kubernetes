@@ -43,9 +43,9 @@ jobs:
 
     - name: Deploy na Frankfurt Klaster
       run: |
-        kubectl apply -f k8s/deployment.yml
-        kubectl apply -f k8s/service.yml
-        kubectl rollout restart deployment/multi-region-app
+        kubectl apply -f k8s/deployment.yml --insecure-skip-tls-verify
+        kubectl apply -f k8s/service.yml --insecure-skip-tls-verify
+        kubectl rollout restart deployment/multi-region-app --insecure-skip-tls-verify
 
   deploy-pariz:
     needs: build-and-push
@@ -62,6 +62,6 @@ jobs:
 
     - name: Deploy na Pariz Klaster
       run: |
-        kubectl apply -f k8s/deployment.yml
-        kubectl apply -f k8s/service.yml
-        kubectl rollout restart deployment/multi-region-app
+        kubectl apply -f k8s/deployment.yml --insecure-skip-tls-verify
+        kubectl apply -f k8s/service.yml --insecure-skip-tls-verify
+        kubectl rollout restart deployment/multi-region-app --insecure-skip-tls-verify
