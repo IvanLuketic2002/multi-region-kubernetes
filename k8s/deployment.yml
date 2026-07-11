@@ -20,3 +20,6 @@ spec:
         ports:
         - containerPort: 8000
         imagePullPolicy: Always
+        env:
+        - name: AWS_REGION
+          value: "TARGET_REGION_PLACEHOLDER"

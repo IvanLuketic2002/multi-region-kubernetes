@@ -43,6 +43,7 @@ jobs:
 
     - name: Deploy na Frankfurt Klaster
       run: |
+        sed -i 's/TARGET_REGION_PLACEHOLDER/eu-central-1 (Frankfurt)/g' k8s/deployment.yml
         kubectl apply -f k8s/deployment.yml --insecure-skip-tls-verify
         kubectl apply -f k8s/service.yml --insecure-skip-tls-verify
         kubectl rollout restart deployment/multi-region-app --insecure-skip-tls-verify
@@ -62,6 +63,7 @@ jobs:
 
     - name: Deploy na Pariz Klaster
       run: |
+        sed -i 's/TARGET_REGION_PLACEHOLDER/eu-west-3 (Pariz)/g' k8s/deployment.yml
         kubectl apply -f k8s/deployment.yml --insecure-skip-tls-verify
         kubectl apply -f k8s/service.yml --insecure-skip-tls-verify
         kubectl rollout restart deployment/multi-region-app --insecure-skip-tls-verify
