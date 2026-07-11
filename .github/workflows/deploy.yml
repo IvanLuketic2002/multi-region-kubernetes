@@ -38,7 +38,7 @@ jobs:
     - name: Podešavanje Kubeconfig-a za Frankfurt
       run: |
         mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG_FRANKFURT }}" > ~/.kube/config
+        echo "${{ secrets.KUBECONFIG_FRANKFURT }}" | base64 -d > ~/.kube/config
         chmod 600 ~/.kube/config
 
     - name: Deploy na Frankfurt Klaster
@@ -57,7 +57,7 @@ jobs:
     - name: Podešavanje Kubeconfig-a za Pariz
       run: |
         mkdir -p ~/.kube
-        echo "${{ secrets.KUBECONFIG_PARIZ }}" > ~/.kube/config
+        echo "${{ secrets.KUBECONFIG_PARIZ }}" | base64 -d > ~/.kube/config
         chmod 600 ~/.kube/config
 
     - name: Deploy na Pariz Klaster
