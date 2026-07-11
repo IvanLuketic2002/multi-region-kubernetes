@@ -1,0 +1,67 @@
+name: Multi-Region GitOps Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ github.sha }}
+    steps:
+    - name: Checkout kod
+      uses: actions/checkout@v3
+
+    - name: Login na Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build i Push Docker slike
+      uses: docker/build-push-action@v4
+      with:
+        context: ./src
+        push: true
+        tags: |
+          ivanluketic2002/multi-region-app:latest
+          ivanluketic2002/multi-region-app:${{ github.sha }}
+
+  deploy-frankfurt:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout kod
+      uses: actions/checkout@v3
+
+    - name: Podešavanje Kubeconfig-a za Frankfurt
+      run: |
+        mkdir -p ~/.kube
+        echo "${{ secrets.KUBECONFIG_FRANKFURT }}" > ~/.kube/config
+        chmod 600 ~/.kube/config
+
+    - name: Deploy na Frankfurt Klaster
+      run: |
+        kubectl apply -f k8s/deployment.yml
+        kubectl apply -f k8s/service.yml
+        kubectl rollout restart deployment/multi-region-app
+
+  deploy-pariz:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout kod
+      uses: actions/checkout@v3
+
+    - name: Podešavanje Kubeconfig-a za Pariz
+      run: |
+        mkdir -p ~/.kube
+        echo "${{ secrets.KUBECONFIG_PARIZ }}" > ~/.kube/config
+        chmod 600 ~/.kube/config
+
+    - name: Deploy na Pariz Klaster
+      run: |
+        kubectl apply -f k8s/deployment.yml
+        kubectl apply -f k8s/service.yml
+        kubectl rollout restart deployment/multi-region-app

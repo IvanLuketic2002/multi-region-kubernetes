@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-region-app
+  labels:
+    app: multi-region-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multi-region-app
+  template:
+    metadata:
+      labels:
+        app: multi-region-app
+    spec:
+      containers:
+      - name: web-app
+        image: ivanluketic2002/multi-region-app:latest
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Always
